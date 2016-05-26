@@ -2,12 +2,18 @@
 module App {
     export function start(canvas: HTMLCanvasElement) {
         let logicThread = setupThreads()
-
+        let critters: Linalg.IVec2[] = []
+        let food: Linalg.IVec2[] = []
+        logicThread.onmessage = e => {
+            critters = e.data.critters
+            food = e.data.food
+        }
         let context = canvas.getContext('2d')
         let camera = new Camera(0.1, context)
         renderLoop(context, () => {
             camera.update()
-            Graphics.drawSpot(context, { x: 0, y: 0 }, 10, "chartreuse")
+            critters.forEach(c => Graphics.drawSpot(context, c, 10, "darkslategray"))
+            food.forEach(f => Graphics.drawSpot(context, f, 5, "chartreuse"))
         })
     }
 
