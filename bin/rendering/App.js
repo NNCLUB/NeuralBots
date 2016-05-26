@@ -1,9 +1,12 @@
-"use strict";
+/// <reference path="../libs/Linalg.ts" />
 var App;
 (function (App) {
     function start(canvas) {
-        renderLoop(canvas.getContext("2d"), () => {
-            //console.log("tjosan")
+        let context = canvas.getContext('2d');
+        let camera = new Camera(0.1, context);
+        renderLoop(context, () => {
+            camera.update();
+            Graphics.drawSpot(context, { x: 0, y: 0 }, 10, "chartreuse");
         });
     }
     App.start = start;

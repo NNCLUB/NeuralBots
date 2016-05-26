@@ -1,5 +1,3 @@
-/// <reference path="../libs/Linalg.ts" />
-"use strict";
 class Camera {
     constructor(speed, context) {
         this.speed = speed;
@@ -18,13 +16,8 @@ class Camera {
         };
         context.canvas.onclick = e => {
             if (e.button === 1) {
-                if (this.isMoving) {
-                    this.mousePos.x = 0;
-                    this.mousePos.y = 0;
-                    this.isMoving = false;
-                }
-                else
-                    this.isMoving = true;
+                this.mousePos = this.isMoving ? { x: 0, y: 0 } : this.mousePos;
+                this.isMoving = !this.isMoving;
             }
         };
         context.canvas.onmousemove = e => {
@@ -34,9 +27,8 @@ class Camera {
             }
         };
     }
-    transform({ x, y }) {
-        this.pos.x += this.mousePos.x + x;
-        this.pos.y += this.mousePos.y + y;
+    update() {
+        this.pos = Linalg.add(this.pos, this.mousePos);
         this.context.translate(this.context.canvas.width / 2, this.context.canvas.height / 2);
         this.context.scale(1, -1);
         this.context.scale(this.zoom, this.zoom);

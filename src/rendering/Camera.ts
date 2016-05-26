@@ -1,5 +1,3 @@
-/// <reference path="../libs/Linalg.ts" />
-"use strict"
 class Camera {
     public pos: Linalg.IVec2 = { x: 0, y: 0 }
     private mousePos: Linalg.IVec2 = { x: 0, y: 0 }
@@ -19,12 +17,8 @@ class Camera {
 
         context.canvas.onclick = e => {
             if (e.button === 1) {
-                if (this.isMoving) {
-                    this.mousePos.x = 0
-                    this.mousePos.y = 0
-                    this.isMoving = false
-                } else
-                    this.isMoving = true
+                this.mousePos = this.isMoving ? { x: 0, y: 0 } : this.mousePos
+                this.isMoving = !this.isMoving
             }
         }
 
@@ -36,9 +30,8 @@ class Camera {
         }
     }
 
-    transform({x, y}: Linalg.IVec2) {
-        this.pos.x += this.mousePos.x + x
-        this.pos.y += this.mousePos.y + y
+    update() {
+        this.pos = Linalg.add(this.pos, this.mousePos)
 
         this.context.translate(this.context.canvas.width / 2, this.context.canvas.height / 2)
         this.context.scale(1, -1)
