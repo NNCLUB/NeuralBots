@@ -1,7 +1,9 @@
+"use strict"
 module App {
     export function start(canvas: HTMLCanvasElement) {
         renderLoop(canvas.getContext("2d"), () => {
             //console.log("tjosan")
+            
         })
     }
 

@@ -1,5 +1,5 @@
 @ECHO OFF
 
-CALL tsc -p src/render_thread/
+CALL tsc -p src/rendering/
 
 PAUSE
