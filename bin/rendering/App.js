@@ -1,9 +1,8 @@
 /// <reference path="../libs/Linalg.ts" />
-/// <reference path="../libs/ChannelWrapper.ts" />
 var App;
 (function (App) {
     function start(canvas) {
-        let logicPorts = setupThreads();
+        let logicThread = setupThreads();
         let context = canvas.getContext('2d');
         let camera = new Camera(0.1, context);
         renderLoop(context, () => {
@@ -15,13 +14,11 @@ var App;
     function setupThreads() {
         let LogicThread = new Worker('bin/logic/LogicThread.js');
         let PhysicsThread = new Worker('bin/logic/PhysicsThread.js');
-        let L2PChannel = ChannelWrapper.GenChannel();
-        let P2LChannel = ChannelWrapper.GenChannel();
-        let R2LChannel = ChannelWrapper.GenChannel();
-        let L2RChannel = ChannelWrapper.GenChannel();
-        LogicThread.postMessage(null, [L2PChannel.send, P2LChannel.recieve, L2RChannel.send, R2LChannel.recieve]);
-        PhysicsThread.postMessage(null, [P2LChannel.send, L2PChannel.recieve]);
-        return { send: R2LChannel.send, recieve: L2RChannel.recieve };
+        let LogicPhysicsChannel = new MessageChannel();
+        let LogicRenderChannel = new MessageChannel();
+        LogicThread.postMessage(null, [LogicPhysicsChannel.port1, LogicRenderChannel.port2]);
+        PhysicsThread.postMessage(null, [LogicPhysicsChannel.port2]);
+        return LogicRenderChannel.port1;
     }
     function clearScreen(context) {
         context.restore();

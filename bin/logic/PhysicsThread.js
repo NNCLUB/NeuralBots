@@ -1,6 +1,7 @@
+//importScripts('bin/libs/Linalg.js')
 onmessage = initEvent => {
     console.log("Initializing PhysicsThread");
-    let [Lsend, Lrecieve] = initEvent.ports;
-    Lrecieve.onmessage = e => {
+    let [LogicThread] = initEvent.ports;
+    LogicThread.onmessage = e => {
     };
 };
